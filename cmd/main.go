@@ -30,7 +30,7 @@ func main() {
 	// Initialize database
 	config.InitDB()
 	// Automigrate the models
-	config.DB.AutoMigrate(&models.Todo{}, &models.User{})
+	config.DB.AutoMigrate(&models.Todo{}, &models.User{}, &models.Product{})
 	// new echo instance
 	e := echo.New()
 	// Serve Swagger documentation

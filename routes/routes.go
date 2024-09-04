@@ -18,5 +18,8 @@ func InitRoutes(e *echo.Echo) {
 	e.POST("/api/todos/create", controllers.CreateTodo, middleware.JWTMiddleware)
 	e.PUT("/api/todos/update/:id", controllers.UpdateTodo, middleware.JWTMiddleware)
 	e.DELETE("/api/todos/delete/:id", controllers.DeleteTodo, middleware.JWTMiddleware)
+	// e-commerce
+	e.POST("/api/products/create", controllers.CreateProduct, middleware.JWTMiddleware)
+	e.GET("/api/products", controllers.GetProducts)
 	
 }
