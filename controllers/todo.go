@@ -135,7 +135,6 @@ func DeleteTodo(c echo.Context) error {
 	if result := config.DB.Delete(&todo); result.Error != nil {
 		return c.JSON(http.StatusInternalServerError, echo.Map{"error": "failed to delete todo", "details": result.Error.Error()})
 	}
-
 	// Return success message
 	return c.NoContent(http.StatusNoContent)
 }
