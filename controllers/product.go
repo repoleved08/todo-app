@@ -16,6 +16,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+//	@Summary		Create a new Product
+//	@Description	Create a new Product
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Products
+//	@Param			product	body		models.Product	true	"Product data"
+//	@Success		201		{object}	models.Product
+//	@Failure		400		{object}	string
+//	@Failure		500		{object}	string
+//	@Router			/api/products/create [post]
+//	@Security		BearerAuth
 func CreateProduct(c echo.Context) error {
 	name := c.FormValue("name")
 	description := c.FormValue("description")
@@ -96,6 +107,14 @@ func CreateProduct(c echo.Context) error {
 	return c.JSON(http.StatusCreated, product)
 }
 
+//	@Summary		Get all Products
+//	@Description	Get all Products
+//	@Produce		json
+//	@Tags			Products
+//	@Success		200	{object}	[]models.Product
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Router			/api/products [get]
 func GetProducts(c echo.Context) error {
 	var products []models.Product
 	if result := config.DB.Find(&products); result.Error != nil {
@@ -104,6 +123,15 @@ func GetProducts(c echo.Context) error {
 	return c.JSON(http.StatusOK, products)
 }
 
+//	@Summary		Get a Product
+//	@Description	Get details of a Product
+//	@Produce		json
+//	@Tags			Products
+//	@Param			id	path		int	true	"Product ID"
+//	@Success		200	{object}	models.Product
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Router			/api/products/{id} [get]
 func GetProductById(c echo.Context) error {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -116,7 +144,18 @@ func GetProductById(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, product)
 }
-
+//	@Summary		Update a Product
+//	@Description	Update a Product by ID
+//	@Accept			json
+//	@Tags			Products
+//	@Produce		json
+//	@Param			id		path		int				true	"Product ID"
+//	@Param			product	body		models.Product	true	"Product data"
+//	@Success		200		{object}	models.Product
+//	@Failure		400		{object}	string
+//	@Failure		404		{object}	string
+//	@Router			/api/products/update/{id} [put]
+//	@Security		BearerAuth
 func UpdateProduct(c echo.Context) error {
 	// Find the product by ID (assumed to be passed as a URL parameter)
 	productID := c.Param("id")
@@ -201,7 +240,17 @@ func UpdateProduct(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, product)
 }
-
+//	@Summary		Delete a Product
+//	@Description	Delete a Product by ID
+//	@Produce		json
+//	@Tags			Products
+//	@Param			id	path		int		true	"Product ID"
+//	@Success		204	{string}	string	"No Content"
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Failure		500	{object}	string
+//	@Router			/api/products/delete/{id} [delete]
+//	@Security		BearerAuth
 func DeleteProduct(c echo.Context) error {
 	id := c.Param("id")
 

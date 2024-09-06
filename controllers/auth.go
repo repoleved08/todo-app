@@ -12,14 +12,15 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-// @Summary Register a new user
-// @Description Create a new user account
-// @Produce json
-// @Param user body models.User true "User Registration"
-// @Success 201 {object} models.User
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Router /api/auth/register [post]
+//	@Summary		Register a new user
+//	@Description	Create a new user account
+//	@Produce		json
+//	@Tags			Authentication
+//	@Param			user	body		models.User	true	"User Registration"
+//	@Success		201		{object}	models.User
+//	@Failure		400		{object}	string
+//	@Failure		500		{object}	string
+//	@Router			/api/auth/register [post]
 func Register(c echo.Context) error {
 	var user models.User
 	if err := c.Bind(&user); err != nil {
@@ -46,27 +47,28 @@ func Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, user)
 }
 
-// @Summary Login user
-// @Description Authenticate user and return a JWT token
-// @Produce json
-// @Param user body models.User true "User Login"
-// @Success 200 {object} models.LoginResponse
-// @Failure 400 {object} string
-// @Failure 401 {object} string
-// @Failure 500 {object} string
-// @Router /api/auth/login [post]
+//	@Summary		Login user
+//	@Description	Authenticate user and return a JWT token
+//	@Produce		json
+//	@Tags			Authentication
+//	@Param			user	body		models.LoginRequest	true	"User Login"
+//	@Success		200		{object}	models.LoginResponse
+//	@Failure		400		{object}	string
+//	@Failure		401		{object}	string
+//	@Failure		500		{object}	string
+//	@Router			/api/auth/login [post]
 func Login(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
+	var loginRequest models.LoginRequest
+	if err := c.Bind(&loginRequest); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"error": "Invalid input", "details": err.Error()})
 	}
 
 	var dbUser models.User
-	if err := config.DB.Where("username = ?", user.Username).First(&dbUser).Error; err != nil {
+	if err := config.DB.Where("username = ?", loginRequest.Username).First(&dbUser).Error; err != nil {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "Invalid username or password"})
 	}
 
-	if err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(user.Password)); err != nil {
+	if err := bcrypt.CompareHashAndPassword([]byte(dbUser.Password), []byte(loginRequest.Password)); err != nil {
 		return c.JSON(http.StatusUnauthorized, echo.Map{"error": "Invalid credentials"})
 	}
 

@@ -11,16 +11,17 @@ import (
 	"gorm.io/gorm"
 )
 
-// @Summary Create a new Todo
-// @Description Create a new Todo
-// @Accept json
-// @Produce json
-// @Param todo body models.Todo true "Todo data"
-// @Success 201 {object} models.Todo
-// @Failure 400 {object} string
-// @Failure 500 {object} string
-// @Router /api/todos/create [post]
-// @Security BearerToken
+//	@Summary		Create a new Todo
+//	@Description	Create a new Todo
+//	@Accept			json
+//	@Produce		json
+//	@Tags			Todo
+//	@Param			todo	body		models.Todo	true	"Todo data"
+//	@Success		201		{object}	models.Todo
+//	@Failure		400		{object}	string
+//	@Failure		500		{object}	string
+//	@Router			/api/todos/create [post]
+//	@Security		BearerAuth
 func CreateTodo(c echo.Context) error {
 	var todo models.Todo
 
@@ -43,13 +44,14 @@ func CreateTodo(c echo.Context) error {
 	return c.JSON(http.StatusCreated, todo)
 }
 
-// @Summary Get all Todos
-// @Description Get all Todos
-// @Produce json
-// @Success 200 {object} []models.Todo
-// @Failure 400 {object} string
-// @Failure 404 {object} string
-// @Router /api/todos [get]
+//	@Summary		Get all Todos
+//	@Description	Get all Todos
+//	@Produce		json
+//	@Tags			Todo
+//	@Success		200	{object}	[]models.Todo
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Router			/api/todos [get]
 func GetTodos(c echo.Context) error {
 	var todos []models.Todo
 	if result := config.DB.Find(&todos); result.Error != nil {
@@ -58,14 +60,15 @@ func GetTodos(c echo.Context) error {
 	return c.JSON(http.StatusOK, todos)
 }
 
-// @Summary Get a Todo
-// @Description Get details of a Todo
-// @Produce json
-// @Param id path int true "Todo ID"
-// @Success 200 {object} models.Todo
-// @Failure 400 {object} string
-// @Failure 404 {object} string
-// @Router /api/todos/{id} [get]
+//	@Summary		Get a Todo
+//	@Description	Get details of a Todo
+//	@Produce		json
+//	@Tags			Todo
+//	@Param			id	path		int	true	"Todo ID"
+//	@Success		200	{object}	models.Todo
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Router			/api/todos/{id} [get]
 func GetTodoById(c echo.Context) error {
 	idParam := c.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -84,17 +87,18 @@ func GetTodoById(c echo.Context) error {
 	return c.JSON(http.StatusOK, todo)
 }
 
-// @Summary Update a Todo
-// @Description Update a Todo by ID
-// @Accept json
-// @Produce json
-// @Param id path int true "Todo ID"
-// @Param todo body models.Todo true "Todo data"
-// @Success 200 {object} models.Todo
-// @Failure 400 {object} string
-// @Failure 404 {object} string
-// @Router /api/todos/update/{id} [put]
-// @Security BearerToken
+//	@Summary		Update a Todo
+//	@Description	Update a Todo by ID
+//	@Accept			json
+//	@Tags			Todo
+//	@Produce		json
+//	@Param			id		path		int			true	"Todo ID"
+//	@Param			todo	body		models.Todo	true	"Todo data"
+//	@Success		200		{object}	models.Todo
+//	@Failure		400		{object}	string
+//	@Failure		404		{object}	string
+//	@Router			/api/todos/update/{id} [put]
+//	@Security		BearerAuth
 func UpdateTodo(c echo.Context) error {
 	id := c.Param("id")
 	var todo models.Todo
@@ -112,16 +116,17 @@ func UpdateTodo(c echo.Context) error {
 	return c.JSON(http.StatusOK, todo)
 }
 
-// @Summary Delete a Todo
-// @Description Delete a Todo by ID
-// @Produce json
-// @Param id path int true "Todo ID"
-// @Success 204 {string} string "No Content"
-// @Failure 400 {object} string
-// @Failure 404 {object} string
-// @Failure 500 {object} string
-// @Router /api/todos/delete/{id} [delete]
-// @Security BearerToken
+//	@Summary		Delete a Todo
+//	@Description	Delete a Todo by ID
+//	@Produce		json
+//	@Tags			Todo
+//	@Param			id	path		int		true	"Todo ID"
+//	@Success		204	{string}	string	"No Content"
+//	@Failure		400	{object}	string
+//	@Failure		404	{object}	string
+//	@Failure		500	{object}	string
+//	@Router			/api/todos/delete/{id} [delete]
+//	@Security		BearerAuth
 func DeleteTodo(c echo.Context) error {
 	id := c.Param("id")
 

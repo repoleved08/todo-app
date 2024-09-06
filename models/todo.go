@@ -6,6 +6,9 @@ import (
 	"gorm.io/gorm"
 )
 
+// Todo model info
+// @Description Todo information
+// @Description with id, title, completed bool, and time of creation
 type Todo struct {
 	ID        uint           `gorm:"primaryKey" json:"id"`
 	Title     string         `gorm:"not null" json:"title"`

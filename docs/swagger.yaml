@@ -1,12 +1,40 @@
 definitions:
+  models.LoginRequest:
+    description: Login required information with username and password
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
   models.LoginResponse:
+    description: response information after login and the jwt token
     properties:
       token:
         type: string
       user:
         $ref: '#/definitions/models.UserDto'
     type: object
+  models.Product:
+    description: product information with name, description, price, image_url and
+      user_id
+    properties:
+      description:
+        type: string
+      image_url:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      user_id:
+        type: integer
+    type: object
   models.Todo:
+    description: Todo information with id, title, completed bool, and time of creation
     properties:
       completed:
         type: boolean
@@ -20,8 +48,17 @@ definitions:
         type: string
     type: object
   models.User:
+    description: User account information with username, email and password
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
     type: object
   models.UserDto:
+    description: response information after login
     properties:
       email:
         type: string
@@ -30,15 +67,8 @@ definitions:
     type: object
 host: localhost:8080
 info:
-  contact:
-    email: support@swagger.io
-    name: API Support
-    url: http://www.swagger.io/support
+  contact: {}
   description: This is a server for managing everything.
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
-  termsOfService: http://swagger.io/terms/
   title: Swagger Techxtrasol API
   version: "1.0"
 paths:
@@ -51,7 +81,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/models.User'
+          $ref: '#/definitions/models.LoginRequest'
       produces:
       - application/json
       responses:
@@ -72,6 +102,8 @@ paths:
           schema:
             type: string
       summary: Login user
+      tags:
+      - Authentication
   /api/auth/register:
     post:
       description: Create a new user account
@@ -98,6 +130,160 @@ paths:
           schema:
             type: string
       summary: Register a new user
+      tags:
+      - Authentication
+  /api/products:
+    get:
+      description: Get all Products
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Product'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Get all Products
+      tags:
+      - Products
+  /api/products/{id}:
+    get:
+      description: Get details of a Product
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Get a Product
+      tags:
+      - Products
+  /api/products/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new Product
+      parameters:
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Create a new Product
+      tags:
+      - Products
+  /api/products/delete/{id}:
+    delete:
+      description: Delete a Product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Delete a Product
+      tags:
+      - Products
+  /api/products/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a Product by ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.Product'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Product'
+        "400":
+          description: Bad Request
+          schema:
+            type: string
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      security:
+      - BearerAuth: []
+      summary: Update a Product
+      tags:
+      - Products
   /api/todos:
     get:
       description: Get all Todos
@@ -119,6 +305,8 @@ paths:
           schema:
             type: string
       summary: Get all Todos
+      tags:
+      - Todo
   /api/todos/{id}:
     get:
       description: Get details of a Todo
@@ -144,6 +332,8 @@ paths:
           schema:
             type: string
       summary: Get a Todo
+      tags:
+      - Todo
   /api/todos/create:
     post:
       consumes:
@@ -172,8 +362,10 @@ paths:
           schema:
             type: string
       security:
-      - BearerToken: []
+      - BearerAuth: []
       summary: Create a new Todo
+      tags:
+      - Todo
   /api/todos/delete/{id}:
     delete:
       description: Delete a Todo by ID
@@ -203,8 +395,10 @@ paths:
           schema:
             type: string
       security:
-      - BearerToken: []
+      - BearerAuth: []
       summary: Delete a Todo
+      tags:
+      - Todo
   /api/todos/update/{id}:
     put:
       consumes:
@@ -238,6 +432,13 @@ paths:
           schema:
             type: string
       security:
-      - BearerToken: []
+      - BearerAuth: []
       summary: Update a Todo
+      tags:
+      - Todo
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
